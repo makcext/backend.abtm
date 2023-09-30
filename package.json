@@ -1,0 +1,8 @@
+{
+  "name": "backend.abtm",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/makcext/backend.abtm.git",
+  "author": "makcext <makcbowka@gmail.com>",
+  "license": "MIT"
+}
