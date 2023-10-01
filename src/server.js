@@ -12,8 +12,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api', (req, res) => {
-  const result = 3 * 4;
+app.get('/status', (req, res) => {
+  const result = 'OK';
   res.json({ result });
 });
 
