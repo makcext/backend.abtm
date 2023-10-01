@@ -1,13 +1,17 @@
-const http = require('http');
+import express from 'express';
+import { json } from 'express';
 
-const server = http.createServer((req, res) => {
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
-  res.write('Hello, world!');
-  res.end();
+const app = express();
+
+app.use(json());
+
+app.get('/api', (req, res) => {
+  const result = 3 * 4;
+  res.json({ result });
 });
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 
-server.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

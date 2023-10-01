@@ -1,11 +1,15 @@
 {
   "name": "backend.abtm",
   "version": "0.0.1",
+  "type": "module",
   "main": "index.js",
   "repository": "https://github.com/makcext/backend.abtm.git",
   "author": "makcext <makcbowka@gmail.com>",
   "license": "MIT",
   "scripts": {
     "start": "node src/server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
   }
 }
