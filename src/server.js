@@ -13,11 +13,11 @@ app.use((req, res, next) => {
 });
 
 app.get('/status', (req, res) => {
-  const result = 'OK';
+  const result = 'ok';
   res.json({ result });
 });
 
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3003;
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
