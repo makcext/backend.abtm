@@ -4,5 +4,8 @@
   "main": "index.js",
   "repository": "https://github.com/makcext/backend.abtm.git",
   "author": "makcext <makcbowka@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/server.js"
+  }
 }
