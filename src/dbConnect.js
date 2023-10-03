@@ -5,12 +5,9 @@ const email = 'a@a.com';
 const password = '1234567890';
 
 const query = `query {
-  restaurants: mongodbData(database: "sample_restaurants", collection: "restaurants") {
-    _id
-    borough
-    cuisine
+  test {
     name
-    restaurant_id
+    sname
   }
 }`;
 
