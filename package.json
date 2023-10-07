@@ -10,9 +10,10 @@
     "compile": "tsc",
     "build": "yarn compile",
     "start": "node ./dist/src/index.js",
+    "dev": "yarn compile && yarn start",
      
     "db": "node src/dbConnect.js",
-    "mongo": "node src/mongo.js"
+    "mongo": "node src/dbstring.js"
   },
   "dependencies": {
     "@apollo/client": "^3.8.4",
