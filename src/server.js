@@ -17,7 +17,7 @@ app.get('/status', (req, res) => {
   res.json({ result });
 });
 
-const port = process.env.PORT || 3003;
+const port = process.env.PORT || 3002;
 
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);

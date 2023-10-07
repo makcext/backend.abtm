@@ -8,7 +8,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node src/server.js",
-    "db": "node src/dbConnect.js"
+    "db": "node src/dbConnect.js",
+    "mongo": "node src/mongo.js"
   },
   "dependencies": {
     "@apollo/client": "^3.8.4",
@@ -19,7 +20,9 @@
     "graphql": "^16.8.1",
     "graphql-request": "^6.1.0",
     "graphql-yoga": "^4.0.5",
-    "mongoose": "^7.5.3",
+    "mongodb": "^6.1.0",
+    "mongoose": "^7.5.4",
+    "node-fetch": "^3.3.2",
     "realm-web": "^2.0.0"
   }
 }
