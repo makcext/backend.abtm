@@ -1,6 +1,6 @@
 praw
 requests
-BeautifulSoup
+beautifulsoup4
 telebot
 pickle
 time
