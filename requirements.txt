@@ -1,0 +1,6 @@
+praw
+requests
+BeautifulSoup
+telebot
+pickle
+time
