@@ -1,5 +1,0 @@
-praw
-requests
-beautifulsoup4
-telebot
-python-telegram-bot
