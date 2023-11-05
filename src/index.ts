@@ -61,7 +61,7 @@ await connect(MONGODB);
 const server = new ApolloServer({ 
   typeDefs, 
   resolvers,
-  introspection: process.env.NODE_ENV !== 'production', // enables introspection in non-production environments
+  introspection: true, // enables introspection in non-production environments
 });
 
 const port = Number(process.env.PORT || '4000');
