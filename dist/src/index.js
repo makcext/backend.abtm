@@ -52,10 +52,22 @@ const resolvers = {
         }
     }
 };
-await connect(MONGODB);
-const server = new ApolloServer({ typeDefs, resolvers });
-const port = Number(process.env.PORT || '4000');
-const { url } = await startStandaloneServer(server, {
-    listen: { port: port }
-});
-console.log(`🚀 Server ready at ${url}`);
+async function startServer() {
+    try {
+        await connect(MONGODB);
+        const server = new ApolloServer({
+            typeDefs,
+            resolvers,
+            introspection: true, // enables introspection in non-production environments
+        });
+        const port = Number(process.env.PORT || '4000');
+        const { url } = await startStandaloneServer(server, {
+            listen: { port: port }
+        });
+        console.log(`🚀 Server ready at ${url}`);
+    }
+    catch (error) {
+        console.error(`Error starting server: ${error}`);
+    }
+}
+startServer();
