@@ -1,4 +1,4 @@
-import e from 'express';
+//book.ts 
 import {Schema, model} from 'mongoose';
 
 interface IBook {

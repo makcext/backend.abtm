@@ -11,6 +11,7 @@ const MONGODB = 'mongodb+srv://root:root@atlascluster.g9bnlyp.mongodb.net/?retry
 const typeDefs = `#graphql
 type Book {
 	_id: String
+	userId: String
 	author: String
 	title: String
 	year: Int
@@ -22,7 +23,14 @@ type User {
 	password: String
 }
 
+type AuthData {
+	userId: ID!
+	token: String!
+	tokenExpiration: Int!
+}
+
 input BookInput {
+	userId: String
 	author: String
 	title: String
 	year: Int
@@ -36,6 +44,7 @@ input UserInput {
 type Query {
 	getBook(ID: ID!): Book!
 	getBooks(limit: Int): [Book]
+	getUserBooks(userId: ID!): [Book]
 }
 
 type Mutation {
@@ -43,7 +52,7 @@ type Mutation {
 	updateBook(ID: ID!, bookInput: BookInput): String!
 	deleteBook(ID: ID!): String!
 	register(userInput: UserInput): String! 
-	login(email: String!, password: String!): String! 
+	login(email: String!, password: String!): AuthData! 
 }
 `;
 
@@ -54,15 +63,18 @@ const resolvers = {
 		},
 		async getBooks(_, { limit }) {
 			return await Book.find().limit(limit);
-		}
+		},
+		async getUserBooks(_, { userId }) {
+			return await Book.find({ userId });
+		},
 	},
 	Mutation: {
-		async createBook(_, { bookInput: { author, title, year } }) {
-			const res = await new Book({ author, title, year }).save();
+		async createBook(_, { bookInput: { userId, author, title, year } }) {
+			const res = await new Book({ userId, author, title, year }).save();
 			return res._id;
-		},
+	},
 		async updateBook(_, { ID, bookInput: { author, title, year } }) {
-			await Book.updateOne({ _id: ID }, { $set: { author, title, year } });
+			await Book.updateOne({ _id: ID }, { $set: { author, title, year }});
 			return ID;
 		},
 		async deleteBook(_, { ID }) {
@@ -72,47 +84,53 @@ const resolvers = {
 		async register(_, { userInput: { email, password } }) {
 			const existingUser = await User.findOne({ email });
 			if (existingUser) {
-				throw new Error('User already exists');
+					throw new Error('User already exists');
 			}
 			const hashedPassword = await bcrypt.hash(password, 12);
 			const user = new User({ email, password: hashedPassword });
 			await user.save();
+			console.log(user);
 			return jwt.sign({ userId: user.id, email: user.email }, 'somesupersecretkey', { expiresIn: '1h' });
-		},
-		async login(_, { email, password }) {
-			const user = await User.findOne({ email });
-			if (!user) {
-				throw new Error('User does not exist');
-			}
-			const isEqual = await bcrypt.compare(password, user.password);
-			if (!isEqual) {
-				throw new Error('Password is incorrect');
-			}
-			return jwt.sign({ userId: user.id, email: user.email }, 'somesupersecretkey', { expiresIn: '1h' });
-		}
+	},
+	async login(_, { email, password }) {
+    const user = await User.findOne({ email });
+    if (!user) {
+        throw new Error('User does not exist');
+    }
+    const isEqual = await bcrypt.compare(password, user.password);
+    if (!isEqual) {
+        throw new Error('Password is incorrect');
+    }
+    const token = jwt.sign({ userId: user.id, email: user.email }, 'somesupersecretkey', { expiresIn: '1h' });
+    return {
+        userId: user.id,
+        token: token,
+        tokenExpiration: 1
+    };
+}
 	}
 };
 
 async function startServer() {
-	try {
-		await connect(MONGODB);
+  try {
+    await connect(MONGODB);
 
-		const server = new ApolloServer({
-			typeDefs,
-			resolvers,
-			introspection: true, // enables introspection in non-production environments
-		});
+    const server = new ApolloServer({ 
+      typeDefs, 
+      resolvers,
+      introspection: true, // enables introspection in non-production environments
+    });
 
-		const port = Number(process.env.PORT || '4000');
+    const port = Number(process.env.PORT || '4000');
 
-		const { url } = await startStandaloneServer(server, {
-			listen: { port: port }
-		});
+    const { url } = await startStandaloneServer( server, {
+      listen: {port: port}
+    });
 
-		console.log(`🚀 Server ready at ${url}`);
-	} catch (error) {
-		console.error(`Error starting server: ${error}`);
-	}
+    console.log(`🚀 Server ready at ${url}`); 
+  } catch (error) {
+    console.error(`Error starting server: ${error}`);
+  }
 }
 
 startServer();
