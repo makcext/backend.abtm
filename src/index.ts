@@ -10,17 +10,18 @@ const MONGODB = 'mongodb+srv://root:root@atlascluster.g9bnlyp.mongodb.net/?retry
 
 const typeDefs = `#graphql
 type Book {
-	_id: String
-	userId: String
-	author: String
-	title: String
-	year: Int
+	_id: ID!
+	userId: String!
+	author: String!
+	title: String!
+	year: Int!
 }
 
 type User {
 	_id: ID!
 	email: String!
 	password: String
+	books: [Book]
 }
 
 type AuthData {
@@ -68,6 +69,14 @@ const resolvers = {
 			return await Book.find({ userId });
 		},
 	},
+
+	User: {
+		async books(user) {
+				return await Book.find({ userId: user._id });
+		},
+},
+
+
 	Mutation: {
 		async createBook(_, { bookInput: { userId, author, title, year } }) {
 			const res = await new Book({ userId, author, title, year }).save();

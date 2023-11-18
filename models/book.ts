@@ -6,6 +6,7 @@ interface IBook {
 	author: String,
 	title: String,
 	year: Number,
+	userId: Schema.Types.ObjectId,
 }
 
 const bookSchema = new Schema<IBook>({
@@ -13,6 +14,8 @@ const bookSchema = new Schema<IBook>({
 	author: {type: String, required: true},
 	title: {type: String, required: true},
 	year: {type: Number, required: true},
+	userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+
 
 });
 
