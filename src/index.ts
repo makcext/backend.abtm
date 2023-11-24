@@ -32,10 +32,10 @@ type AuthData {
 }
 
 input BookInput {
-	userId: String
-	author: String
-	title: String
-	year: Int
+	userId: String!
+	author: String!
+	title: String!
+	year: Int!
 }
 
 input UserInput {
