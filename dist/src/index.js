@@ -24,9 +24,9 @@ type User {
 }
 
 type AuthData {
-	userId: ID!
-	token: String!
-	tokenExpiration: Int!
+  userId: ID!
+  token: String!
+  tokenExpiration: Int!
 }
 
 input BookInput {
@@ -52,7 +52,7 @@ type Mutation {
 	updateBook(ID: ID!, bookInput: BookInput): String!
 	deleteBook(ID: ID!): String!
 	register(userInput: UserInput): String! 
-	login(email: String!, password: String!): AuthData! 
+	login(userInput: UserInput): AuthData!
 }
 `;
 const resolvers = {
@@ -63,8 +63,21 @@ const resolvers = {
         async getBooks(_, { limit }) {
             return await Book.find().limit(limit);
         },
-        async getUserBooks(_, { userId }) {
-            return await Book.find({ userId });
+        async getUserBooks(_, { token }) {
+            if (!token) {
+                throw new Error('Token not provided');
+            }
+            let decodedToken;
+            try {
+                decodedToken = jwt.verify(token, 'somesupersecretkey');
+            }
+            catch (err) {
+                throw new Error('Token is invalid');
+            }
+            if (!decodedToken) {
+                throw new Error('Token is invalid');
+            }
+            return await Book.find({ userId: decodedToken.userId });
         },
     },
     User: {
@@ -96,7 +109,7 @@ const resolvers = {
             console.log(user);
             return jwt.sign({ userId: user.id, email: user.email }, 'somesupersecretkey', { expiresIn: '1h' });
         },
-        async login(_, { email, password }) {
+        async login(_, { userInput: { email, password } }) {
             const user = await User.findOne({ email });
             if (!user) {
                 throw new Error('User does not exist');
