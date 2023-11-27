@@ -66,24 +66,13 @@ const resolvers = {
 		async getBooks(_, { limit }) {
 			return await Book.find().limit(limit);
 		},
-		async getUserBooks(_, { token }) {
-        if (!token) {
-            throw new Error('Token not provided');
-        }
-
-        let decodedToken;
-        try {
-            decodedToken = jwt.verify(token, 'somesupersecretkey');
-        } catch (err) {
-            throw new Error('Token is invalid');
-        }
-
-        if (!decodedToken) {
-            throw new Error('Token is invalid');
-        }
-
-        return await Book.find({ userId: decodedToken.userId });
-    },
+		async getUserBooks(_, { userId }) {
+			if (!userId) {
+				throw new Error('User ID not provided');
+			}
+		
+			return await Book.find({ userId: userId });
+		},
 	},
 
 	User: {
